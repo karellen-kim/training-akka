@@ -1,9 +1,9 @@
-package com.example.retry
+package com.example.classic.retry
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.pattern.{ask, pipe}
-import com.example.log.Log
-import com.example.retry.RetryActor.{Response, Retry}
+import com.example.classic.retry.RetryActor.{Response, Retry}
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.Future
 import scala.concurrent.duration.{FiniteDuration, _}
@@ -21,8 +21,7 @@ object RetryActor {
   case class Retry(originalSender: ActorRef, message: Any, times: Int)
 }
 
-class RetryActor(forwardTo: ActorRef, maxTries: Int, retryTimeOut: FiniteDuration, retryInterval: FiniteDuration) extends Actor {
-  val log = Log(this.getClass)
+class RetryActor(forwardTo: ActorRef, maxTries: Int, retryTimeOut: FiniteDuration, retryInterval: FiniteDuration) extends Actor with ActorLogging {
   import context.dispatcher
 
   def retriable: Receive = {
@@ -42,6 +41,7 @@ class RetryActor(forwardTo: ActorRef, maxTries: Int, retryTimeOut: FiniteDuratio
       }
       context.system.scheduler.scheduleOnce(retryInterval, self, Retry(originalSender, message, triesLeft - 1))
     case Response(originalSender, result) =>
+      log.debug("Done")
       originalSender ! result
       context stop self
   }
@@ -52,9 +52,13 @@ class RetryActor(forwardTo: ActorRef, maxTries: Int, retryTimeOut: FiniteDuratio
       // become : 액터의 Receive를 새로운 Receive로 변경한다.
       context.become(retriable, false)
   }
+
+  override def postStop() = {
+    log.debug(s"Stop actor : ${self.path.name}")
+  }
 }
 
-class MockActor extends Actor {
+class MockActor extends Actor with ActorLogging {
   import context.dispatcher
 
   override def receive: Receive = {
@@ -65,23 +69,24 @@ class MockActor extends Actor {
   }
 }
 
-object RetryActorApp extends App {
-  val log = Log(this.getClass)
+object RetryClassicActorApp extends App {
+  val log = LoggerFactory.getLogger(this.getClass)
 
   val system = ActorSystem("RetryActorSystem")
   import system.dispatcher
 
   val timeout = 5.seconds
   val mockActor = system.actorOf(Props[MockActor], "mockActor")
-  val retryActor = system.actorOf(Props(classOf[RetryActor], mockActor, 3, timeout, timeout), "retryActor")
   def callback(res: Try[Any]) = res match {
     case Success(s) => log.debug(s"receive response successfully. respose=${s}")
     case Failure(f) => log.debug(s"receive error. respose=${f.getMessage}")
   }
 
-  //log.title("success")
-  //(retryActor ? Ok)(timeout).onComplete(callback)
+/*  val retryActor1 = system.actorOf(Props(classOf[RetryActor], mockActor, 3, timeout, timeout), "retryActor1")
+  log.title("success")
+  (retryActor1 ? Ok)(timeout).onComplete(callback)*/
 
-  log.title("error")
-  (retryActor ? Error)(timeout).onComplete(callback)
+  val retryActor2 = system.actorOf(Props(classOf[RetryActor], mockActor, 3, timeout, 0.second), "retryActor2")
+  log.debug("error")
+  (retryActor2 ? Error)(timeout).onComplete(callback)
 }

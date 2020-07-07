@@ -1,9 +1,9 @@
 //#full-example
-package com.example.basic
+package com.example.typed.basic
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
-import com.example.basic.GreeterMain.SayHello
+import com.example.typed.basic.GreeterMain.SayHello
 
 //#greeter-actor
 object Greeter {

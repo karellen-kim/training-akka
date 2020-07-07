@@ -1,8 +1,8 @@
-package com.example.basic
+package com.example.classic.basic
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.pattern.{ask, pipe}
-import com.example.log.Log
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -15,8 +15,7 @@ case object Error extends Result
 case object Tell
 case class Ask(expectedResult: Result)
 
-class AskActor extends Actor {
-  val log = Log(this.getClass)
+class AskActor extends Actor with ActorLogging {
   import context.dispatcher
 
   override def receive: Receive = {
@@ -30,8 +29,7 @@ class AskActor extends Actor {
   }
 }
 
-class TellActor(askActor: ActorRef) extends Actor {
-  val log = Log(this.getClass)
+class TellActor(askActor: ActorRef) extends Actor with ActorLogging {
   import context.dispatcher
 
   override def receive: Receive = {
@@ -46,7 +44,7 @@ class TellActor(askActor: ActorRef) extends Actor {
 }
 
 object ClassicActorMain extends App {
-  val log = Log(this.getClass)
+  val log = LoggerFactory.getLogger(this.getClass)
 
   val system = ActorSystem("ClassicActorSystem")
   import system.dispatcher
@@ -54,15 +52,15 @@ object ClassicActorMain extends App {
   val askActor = system.actorOf(Props[AskActor], "askActor")
   val tellActor = system.actorOf(Props(classOf[TellActor], askActor), "tellActor")
 
-  log.title("tell")
+  log.debug("tell")
   tellActor ! Tell
 
-  log.title("ask and return success")
+  log.debug("ask and return success")
   (tellActor ? Ask(Ok))(3.seconds).map { respose =>
     log.debug(s"receive response successfully. respose=${respose}")
   }
 
-  log.title("ask and return failure")
+  log.debug("ask and return failure")
   (tellActor ? Ask(Error))(3.seconds).onComplete {
     case Success(s) => log.debug(s"receive response successfully. respose=${s}")
     case Failure(f) => log.debug(s"receive error. respose=${f.getMessage}")
