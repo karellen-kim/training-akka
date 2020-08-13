@@ -10,7 +10,7 @@ import scala.concurrent.Future
 import scala.language.postfixOps
 
 // 참고 : https://gist.github.com/rrodseth/ed3e5edf90ce36e3cf6b
-object Repeat extends AkkaApp{
+object RepeatSource extends AkkaApp{
   val sink: Sink[Any, Future[Done]] = Sink.foreach(println)
   var start = new AtomicInteger(0)
 
@@ -18,7 +18,7 @@ object Repeat extends AkkaApp{
       println("# Execute repeatSource")
       (start.get() to start.addAndGet(10)).toList
   }
-  //repeatSource.runWith(sink)
+  //repeatSource.runWith(sink) // 반복되지 않음
 
   def callFunc(): Future[List[Int]] = Future {
     println("# Execute future")
