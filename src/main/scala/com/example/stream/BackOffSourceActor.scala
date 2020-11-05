@@ -1,11 +1,11 @@
-package com.example.classic.stream
+package com.example.stream
 
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.stream.Materializer
 import akka.stream.scaladsl.{RestartSource, Source}
-import com.example.classic.stream.BackOffActor.{Result, Start}
+import com.example.stream.BackOffActor.{Result, Start}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -61,7 +61,7 @@ class BackOffReceiverActor extends Actor with ActorLogging {
   }
 }
 
-object BackOffApp extends App {
+object BackOffSourceApp extends App {
   val system = ActorSystem("ActorSystem")
   implicit val ec = system.dispatcher
   implicit val mat = Materializer(system)

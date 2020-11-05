@@ -1,4 +1,4 @@
-package com.example.classic.stream
+package com.example.stream
 
 import akka.stream.scaladsl.Source
 import com.example.utils.AkkaApp
@@ -8,8 +8,6 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 object PaginationCursor extends AkkaApp {
-  val log = LoggerFactory.getLogger(this.getClass)
-
   Source
     .unfoldAsync(Some(0): Option[Int] /* startPage */) { pageOpt: Option[Int] =>
       pageOpt match {

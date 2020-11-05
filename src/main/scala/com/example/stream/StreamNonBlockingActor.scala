@@ -1,4 +1,4 @@
-package com.example.classic.stream
+package com.example.stream
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -7,7 +7,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.pattern.ask
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Source}
-import com.example.classic.stream.StreamActor.Start
+import com.example.stream.StreamActor.Start
 import com.example.utils.CountableThreadPoolHelper
 import org.slf4j.LoggerFactory
 

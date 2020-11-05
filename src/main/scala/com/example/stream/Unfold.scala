@@ -1,4 +1,4 @@
-package com.example.classic.stream
+package com.example.stream
 
 import akka.stream.scaladsl.Source
 import com.example.utils.AkkaApp

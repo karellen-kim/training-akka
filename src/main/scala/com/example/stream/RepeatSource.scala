@@ -1,4 +1,4 @@
-package com.example.classic.stream
+package com.example.stream
 
 import java.util.concurrent.atomic.AtomicInteger
 

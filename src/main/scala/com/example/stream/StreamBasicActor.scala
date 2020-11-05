@@ -1,4 +1,4 @@
-package com.example.classic.stream
+package com.example.stream
 
 import akka.{Done, NotUsed}
 import akka.stream.scaladsl.{Flow, Sink, Source}
@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.Future
 
 object StreamBasicActor extends AkkaApp {
-  val log = LoggerFactory.getLogger(this.getClass)
-
   val intSource: Source[Int, NotUsed] = Source(1 to 10)
 
   // runForeach

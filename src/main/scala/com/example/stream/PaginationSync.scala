@@ -1,12 +1,10 @@
-package com.example.classic.stream
+package com.example.stream
 
 import akka.stream.scaladsl.Source
 import com.example.utils.AkkaApp
 import org.slf4j.LoggerFactory
 
 object PaginationSync extends AkkaApp {
-  val log = LoggerFactory.getLogger(this.getClass)
-
   Source
     .unfold(Some(0): Option[Int] /* startPage */) { pageOpt: Option[Int] =>
       pageOpt match {

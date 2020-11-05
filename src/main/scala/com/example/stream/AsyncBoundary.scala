@@ -1,4 +1,4 @@
-package com.example.classic.stream
+package com.example.stream
 
 import akka.stream.scaladsl.{Sink, Source}
 import com.example.utils.AkkaApp
@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.ExecutionContext
 
 object AsyncBoundary extends AkkaApp {
-  val log = LoggerFactory.getLogger(this.getClass)
   val blockingDispatcher: ExecutionContext = system.dispatchers.lookup("blocking-thread-pool-dispatcher")
 
   def spin(value: Int): Int = {

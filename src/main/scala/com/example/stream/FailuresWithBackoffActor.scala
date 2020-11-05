@@ -1,11 +1,11 @@
-package com.example.classic.stream
+package com.example.stream
 
 import java.util.concurrent.atomic.AtomicInteger
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.stream.Materializer
 import akka.stream.scaladsl.{RestartSource, Source}
-import com.example.classic.stream.FailuresWithBackoffActor.{Result, Start}
+import com.example.stream.FailuresWithBackoffActor.{Result, Start}
 import com.example.utils.AkkaApp
 
 import scala.concurrent.Future

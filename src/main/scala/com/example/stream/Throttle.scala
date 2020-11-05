@@ -1,9 +1,9 @@
-package com.example.classic.stream
+package com.example.stream
 
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
-import com.example.classic.stream.ThrottleActor.{Abort, Start}
+import com.example.stream.ThrottleActor.{Abort, Start}
 import com.example.utils.AkkaApp
 
 import scala.concurrent.{ExecutionContext, Future}

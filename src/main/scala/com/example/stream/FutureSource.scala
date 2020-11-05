@@ -1,4 +1,4 @@
-package com.example.classic.stream
+package com.example.stream
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.Future
 
 object FutureSource extends AkkaApp {
-  val log = LoggerFactory.getLogger(this.getClass)
-
   val users: Future[Source[Int, NotUsed]] = Future {
     Source((1 to 100).toList)
   }
